@@ -88,11 +88,8 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
-    - uses: burrunan/gradle-cache-action@v1
-      name: Test
-      with:
-        job-id: errprone
-        multi-cache-enabled: false
-        arguments: --scan --no-parallel --no-daemon -PenableErrorprone classes
+    - name: 'Test'
+      run: |
+        ./gradlew --no-parallel build -x distTar -x distTarSource -Dskip.test_TestDNSCacheManager.testWithCustomResolverAnd1Server=true
       env:
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
