@@ -8,19 +8,14 @@ const matrix = new MatrixBuilder();
 matrix.addAxis({
   name: 'java_distribution',
   values: [
-    {value: 'corretto', vendor: 'amazon', weight: 1},
-    {value: 'liberica', vendor: 'bellsoft', weight: 1},
-    {value: 'microsoft', vendor: 'microsoft', weight: 1},
-    {value: 'oracle', vendor: 'oracle', weight: 1},
     // There are issues running Semeru JDK with Gradle 8.5
     // See https://github.com/gradle/gradle/issues/27273
     // {value: 'semeru', vendor: 'ibm', weight: 4},
     {value: 'temurin', vendor: 'eclipse', weight: 1},
-    {value: 'zulu', vendor: 'azul', weight: 1},
+    
   ]
 });
 
-const eaJava = '22';
 
 matrix.addAxis({
   name: 'java_version',
@@ -28,7 +23,6 @@ matrix.addAxis({
   values: [
     '17',
     '21',
-    eaJava,
   ]
 });
 
@@ -47,8 +41,7 @@ matrix.addAxis({
   values: [
     // TODO: X11 is not available. Un-comment when https://github.com/burrunan/gradle-cache-action/issues/48 is resolved
     // 'ubuntu-latest',
-    'windows-latest',
-    'macos-latest'
+    self-hosted
   ]
 });
 
@@ -121,9 +114,6 @@ include.forEach(v => {
   jvmArgs.push(`-Duser.language=${v.locale.language}`);
   v.java_distribution = v.java_distribution.value;
   v.java_vendor = v.java_distribution.vendor;
-  if (v.java_distribution === 'oracle') {
-      v.oracle_java_website = v.java_version === eaJava ? 'jdk.java.net' : 'oracle.com';
-  }
   v.non_ea_java_version = v.java_version === eaJava ? '' : v.java_version;
   if (v.java_distribution !== 'semeru' && Math.random() > 0.5) {
     // The following options randomize instruction selection in JIT compiler
