@@ -90,6 +90,6 @@ jobs:
         distribution: 'temurin'
     - name: 'Test'
       run: |
-        ./gradlew --no-parallel build -x distTar -x distTarSource -Dskip.test_TestDNSCacheManager.testWithCustomResolverAnd1Server=true
+        ./gradlew --no-parallel build -x distTar -x signDistTar -x distTarSource -x signDistTarSource -Dskip.test_TestDNSCacheManager.testWithCustomResolverAnd1Server=true
       env:
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
