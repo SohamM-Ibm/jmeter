@@ -15,21 +15,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  matrix_prep:
-    name: Matrix Preparation
-    runs-on: slef-hosted
-    steps:
+   name: Matrix Preparation
+   runs-on: slef-hosted
+   steps:
       - uses: actions/checkout@v4
       - id: set-matrix
         run: |
           node .github/workflows/matrix.js
 
-  test:
-    needs: matrix_prep
-    name: '${{ matrix.name }}'
-    runs-on: ${{ matrix.os }}
-    env:
-      TZ: ${{ matrix.tz }}
+   
+   test:
+    
+    name: Test
+    runs-on: self-hosted
     strategy:
       matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
       fail-fast: false
