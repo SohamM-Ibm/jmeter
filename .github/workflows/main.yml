@@ -18,11 +18,6 @@ jobs:
   matrix_prep:
     name: Matrix Preparation
     runs-on: slef-hosted
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    env:
-      # Number of jobs to generate in matrix.js
-      MATRIX_JOBS: 4
     steps:
       - uses: actions/checkout@v4
       - id: set-matrix
