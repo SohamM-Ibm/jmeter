@@ -71,23 +71,11 @@ matrix.setNamePattern(['java_version', 'java_distribution', 'hash', 'os', 'tz', 
 
 // Semeru uses OpenJ9 jit which has no option for making hash codes the same
 matrix.exclude({java_distribution: {value: 'semeru'}, hash: {value: 'same'}});
-// Ignore builds with JAVA EA for now, see https://github.com/apache/jmeter/issues/6114
-matrix.exclude({java_version: eaJava})
-matrix.imply({java_version: eaJava}, {java_distribution: {value: 'oracle'}})
-// TODO: Semeru does not ship Java 21 builds yet
-matrix.exclude({java_distribution: {value: 'semeru'}, java_version: '21'});
-// Ensure at least one job with "same" hashcode exists
-matrix.generateRow({hash: {value: 'same'}});
-// Ensure at least one Windows and at least one Linux job is present (macOS is almost the same as Linux)
-matrix.generateRow({os: 'windows-latest'});
-// TODO: un-comment when xvfb will be possible
-// matrix.generateRow({os: 'ubuntu-latest'});
+
 // Ensure there will be at least one job with Java 17
 matrix.generateRow({java_version: "17"});
 // Ensure there will be at least one job with Java 21
 matrix.generateRow({java_version: "21"});
-// Ensure there will be at least one job with Java EA
-// matrix.generateRow({java_version: eaJava});
 const include = matrix.generateRows(process.env.MATRIX_JOBS || 5);
 if (include.length === 0) {
   throw new Error('Matrix list is empty');
@@ -114,26 +102,13 @@ include.forEach(v => {
   jvmArgs.push(`-Duser.language=${v.locale.language}`);
   v.java_distribution = v.java_distribution.value;
   v.java_vendor = v.java_distribution.vendor;
-  v.non_ea_java_version = v.java_version === eaJava ? '' : v.java_version;
   if (v.java_distribution !== 'semeru' && Math.random() > 0.5) {
     // The following options randomize instruction selection in JIT compiler
     // so it might reveal missing synchronization
     v.name += ', stress JIT';
     v.testDisableCaching = 'JIT randomization should not be cached';
     jvmArgs.push('-XX:+UnlockDiagnosticVMOptions');
-    if (v.java_version >= 8) {
-      // Randomize instruction scheduling in GCM
-      // share/opto/c2_globals.hpp
-      jvmArgs.push('-XX:+StressGCM');
-      // Randomize instruction scheduling in LCM
-      // share/opto/c2_globals.hpp
-      jvmArgs.push('-XX:+StressLCM');
-    }
-    if (v.java_version >= 16) {
-      // Randomize worklist traversal in IGVN
-      // share/opto/c2_globals.hpp
-      jvmArgs.push('-XX:+StressIGVN');
-    }
+    
     if (v.java_version >= 17) {
       // Randomize worklist traversal in CCP
       // share/opto/c2_globals.hpp
