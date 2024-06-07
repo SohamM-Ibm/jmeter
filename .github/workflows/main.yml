@@ -53,7 +53,7 @@ jobs:
     - name: Test
       shell: bash
       run: |
-        ./gradlew --scan --no-parallel build -x distTar -x distTarSource -x distTarSha512 -x distTarSourceSha512 -PtestExtraJvmArgs=${{ matrix.testExtraJvmArgs }} -PtestDisableCaching=${{ matrix.testDisableCaching }}
+        ./gradlew --scan --no-parallel build -x distTar -x distTarSource -x distTarSha512 -x distTarSourceSha512 -PtestExtraJvmArgs=${{ matrix.testExtraJvmArgs }} -PtestDisableCaching=${{ matrix.testDisableCaching }} -PjdkBuildVersion=17 -PjdkTestVersion=${{ matrix.java_version }} -PjdkTestVendor=${{ matrix.java_vendor }} -Porg.gradle.java.installations.auto-download=false
       
   errorprone:
     name: 'Error Prone (JDK 17)'
