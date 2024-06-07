@@ -41,7 +41,6 @@ jobs:
       with:
         # The latest one will be the default, so we use Java 17 for launching Gradle
         java-version: |
-          21
           17
         distribution: temurin
         architecture: s390x
@@ -54,7 +53,7 @@ jobs:
     - name: Test
       shell: bash
       run: |
-        ./gradlew --no-parallel build -x distTar -x distTarSource -Dskip.test_TestDNSCacheManager.testWithCustomResolverAnd1Server=true
+        ./gradlew --scan --no-parallel build -x distTar -x distTarSource -x distTarSha512 -x distTarSourceSha512 -PtestExtraJvmArgs=${{ matrix.testExtraJvmArgs }} -PtestDisableCaching=${{ matrix.testDisableCaching }}
       
   errorprone:
     name: 'Error Prone (JDK 17)'
