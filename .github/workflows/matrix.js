@@ -39,9 +39,7 @@ matrix.addAxis({
   name: 'os',
   title: x => x.replace('-latest', ''),
   values: [
-    // TODO: X11 is not available. Un-comment when https://github.com/burrunan/gradle-cache-action/issues/48 is resolved
-    // 'ubuntu-latest',
-    self-hosted
+    'self-hosted'
   ]
 });
 
@@ -60,10 +58,6 @@ matrix.addAxis({
   values: [
     {language: 'de', country: 'DE'},
     {language: 'fr', country: 'FR'},
-    // TODO: fix :src:dist-check:batchBUG_62847
-    // Fails with "ERROR o.a.j.u.JMeterUtils: Could not find resources for 'ru_EN'"
-    // {language: 'ru', country: 'RU'},
-    {language: 'tr', country: 'TR'},
   ]
 });
 
